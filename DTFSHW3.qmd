@@ -1,0 +1,82 @@
+---
+title: "Homework 3"
+author: "Dylan Freebairn-Smith"
+format: html
+editor: visual
+toc: true
+execute: 
+  warning: false
+  message: false
+---
+
+```{r}
+#load in packages
+library(tidyverse)
+library(readxl)
+library(here)
+library(janitor)
+
+#visualize pairs
+library(GGally)
+
+#selecting models
+library(MuMIn)
+
+#model predictions
+library(ggeffects)
+
+#model tables
+library(gtsummary)
+library(flextable)
+library(modelsummary)
+
+drought_exp <- read_xlsx(path = here("data", 
+                                     "Valliere_etal_EcoApps_Data.xlsx"),
+                         sheet = "First Harvest")
+```
+
+```{r}
+str(drought_exp)
+class(drought_exp)
+```
+
+**Clean the data**
+
+```{r}
+# cleaning
+drought_exp_clean <- drought_exp %>% 
+  clean_names() %>% # nicer column names
+  mutate(species_name = case_when( # adding column with species scientific names
+    species == "ENCCAL" ~ "Encelia californica", # bush sunflower
+    species == "ESCCAL" ~ "Eschscholzia californica", # California poppy
+    species == "PENCEN" ~ "Penstemon centranthifolius", # Scarlet bugler
+    species == "GRICAM" ~ "Grindelia camporum", # great valley gumweed
+    species == "SALLEU" ~ "Salvia leucophylla", # Purple sage
+    species == "STIPUL" ~ "Nasella pulchra", # Purple needlegrass
+    species == "LOTSCO" ~ "Acmispon glaber" # deerweed
+  )) %>% 
+  relocate(species_name, .after = species) %>% # moving species_name column after species
+  mutate(water_treatment = case_when( # adding column with full treatment names
+    water == "WW" ~ "Well watered",
+    water == "DS" ~ "Drought stressed"
+  )) %>% 
+  relocate(water_treatment, .after = water) # moving water_treatment column after water
+```
+
+```{r}
+ggpairs(drought_exp_clean, # data frame
+        columns = c("leaf_dry_weight_g", # columns to visualize
+                    "sla", 
+                    "shoot_g", 
+                    "root_g", 
+                    "total_g"), 
+        upper = list(method = "pearson")) + # calculating Pearson correlation coefficient
+  theme_bw() + # cleaner theme
+  theme(panel.grid = element_blank()) # getting rid of gridlines
+```
+
+Choose 3 pairs of variables to compare. Make notes of those comparisons below.    
+
+**Root and Shoot mass are strongly positively correlated (pearson's r: 0.553)**
+**Root and total mass strongly positively correlated (pearson's r: 0.858)**
+**Root and total mass are strongly positively correlated (pearson's r: 0.902)**
