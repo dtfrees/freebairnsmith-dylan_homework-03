@@ -29,6 +29,7 @@ library(ggeffects)
 library(gtsummary)
 library(flextable)
 library(modelsummary)
+library(tibble) # for adding rows manually
 
 drought_exp <- read_xlsx(path = here("data", 
                                      "Valliere_etal_EcoApps_Data.xlsx"),
@@ -75,7 +76,7 @@ ggpairs(drought_exp_clean, # data frame
   theme(panel.grid = element_blank()) # getting rid of gridlines
 ```
 
-Choose 3 pairs of variables to compare. Make notes of those comparisons below.    
+Choose 3 pairs of variables to compare. Make notes of those comparisons below.
 
 **Root and Shoot mass are strongly positively correlated (pearson's r: 0.553)**
 
@@ -83,7 +84,7 @@ Choose 3 pairs of variables to compare. Make notes of those comparisons below.
 
 **Root and total mass are strongly positively correlated (pearson's r: 0.902)**
 
-### how does total biomass differ between species?
+### How does total biomass differ between species?
 
 ```{r}
 ggplot(data = drought_exp_clean, # data frame
@@ -97,7 +98,7 @@ ggplot(data = drought_exp_clean, # data frame
 
 **Plants with larger biomass seem to have larger ranges. Grindelia has highest biomass and Acmispon has the lowest.**
 
-### how does total biomass differ between water treatments?
+### How does total biomass differ between water treatments?
 
 ```{r}
 ggplot(data = drought_exp_clean, # data frame
@@ -107,7 +108,7 @@ ggplot(data = drought_exp_clean, # data frame
               height = 0) # not jittering points up and down
 ```
 
-**Well watered plants have a much larger range of total biomass than drough stressed plants.  Overall, the Well watered plants have a larger biomass.  This makes sense based on the biology of plants**
+**Well watered plants have a much larger range of total biomass than drought stressed plants. Overall, the well watered plants have a larger biomass. This makes sense based on the biology of plants**
 
 ### how does specific leaf area (SLA) influence total biomass?
 
@@ -118,26 +119,26 @@ ggplot(data = drought_exp_clean, # data frame
   geom_point() # scatterplot
 ```
 
-**Specific leaf area seems to have not much effect on the total biomass. Statistically they have a moderate correlation (Check correlation!).**
+**Specific leaf area seems to have not much effect on the total biomass. However, statistically they have a moderate correlation (Check correlation!).**
 
 # Model construction
 
-What is the null model?  
+What is the null model?
 
-0. **None of the factors can predict the other**  
+0.  **None of the factors can predict the other.**
 
-What is the saturated model?  
+What is the saturated model?
 
-1. **SLA, Water treatment, and species**  
+1.  **SLA, Water treatment, and species.**
 
-In class we are going to try two more models:  
+In class we are going to try two more models:
 
-2.  **total biomass as a function of SLA and water treatment**  
-3.  **total biomass as a function of SLA and species**
+2.  **Total biomass as a function of SLA and water treatment.**
+3.  **Total biomass as a function of SLA and species.**
 
-For homework, you will construct one more model:  
+For homework, you will construct one more model:
 
-4. **total biomass as a function of water treatment and species**  
+4.  **Total biomass as a function of water treatment and species.**
 
 You will then compare all 5 models to determine which best describes total biomass. **For your homework, you will need to create a table summarizing the structure of these models.**
 
@@ -159,6 +160,7 @@ par(mfrow = c(2, 2))
 plot(model1)
 # you might get a warning when you run this code - that is ok!
 ```
+
 **diagnostic for saturated model looked good**
 
 ## 2. total biomass as a function of SLA and water treatment
@@ -180,11 +182,19 @@ model3 <- lm(total_g ~ sla + species_name,
 
 plot(model3)
 ```
+
 **Look at diagnostics later**
+
+```{r}
+model4 <- lm(total_g ~ water_treatment + species_name,
+             data = drought_exp_clean)
+
+plot(model4)
+```
 
 # Model selection
 
-From the `MuMIn` package 
+From the `MuMIn` package
 
 Multi Model Inference (MuMIn)
 
@@ -192,60 +202,78 @@ Multi Model Inference (MuMIn)
 model.sel(model0,
           model1, 
           model2, 
-          model3)
+          model3,
+          model4)
 ```
 
-Out of the four models we have tried, the best model is the one that includes **All three predictors: SLA, Species and water treatment**  
+Out of the four models we have tried, the best model is the one that includes **Only two of three predictors: Species and water treatment.** (Lowest AIC)
 
 ***Note that this may change once you fit and compare the other model!***
 
 **look at the diagnostic again**
 
-# Model summary
+# Model summaries
+
+```{r}
+summary(model0)
+```
 
 ```{r}
 summary(model1)
 ```
 
-What are the reference levels?  
+```{r}
+summary(model2)
+```
 
-- reference for `water_treatment`  
-- reference for `species_name`  
+```{r}
+summary(model3)
+```
 
-**reference for water_treatment:** **water_treatment**  
-**reference for species_name:** **Species_NameAcispon Glaber**  
+```{r}
+summary(model4)
+```
 
-Interpret the model estimates for the:  
+What are the reference levels?
 
-- intercept: **mass of acmispon glaber in drought stressed treatmenr when SLA = 0**  
-- SLA slope: **across drought treamenmts and species, with each 1 unit increase in SLA (mm^2^/dry mass leaf), we expect an increase in total mass of - 0.00025 WHICH MEANS WITH THE ESTIMATE AND STANDARD ERROR THER IS NO EFFECT OF SLA ON TOTAL MASS**  
-- well watered estimate: **Across species and SLA well watered plants tend to be 0.12 +- ( figure out +- in latex) 0.12 grams heavier than drought stressed plants**    
-- Lotus scoparius estimate: **insert response here**    
-- Stipa pulchra estimate: **insert response here**    
+summary(model1) - reference for `species_name`
+
+**reference for water_treatment:** water_treatment: Drought stressed **reference for species_name:** Species_Name: Acispon Glaber
+
+Interpret the model estimates for the:
+
+-   intercept: **Mass of Acmispon Glaber in drought stressed treatment when SLA = 0**\
+-   SLA slope: **Across drought treatments and species, with each 1 unit increase in SLA (mm^2^/dry mass leaf), we expect an increase in total mass of - 0.00025 WHICH MEANS WITH THE ESTIMATE AND STANDARD ERROR THERE IS NO EFFECT OF SLA ON TOTAL MASS**\
+-   well watered estimate: **Across species and SLA well watered plants tend to be 0.12 ± 0.02 grams heavier than drought stressed plants**\
+-   Lotus scoparius (Acmispon Glaber) estimate: **When in a drought stressed treatment and when SLA = 0 Lotus Scoparius has 0.08 ± 0.06 grams of biomass.** \<-- ***???***{.underline}
+-   Stipa(Nasella) pulchra estimate: **Across water treatments and SLA *Stipa pulchra* tend to be 0.24 ± 0.04 grams heavier than Acmispon Glaber**
 
 # Model predictions
 
 **Note:** only plot terms in the model you select - if your doesn't include one of these terms, take it out and adjust the plotting code accordingly!
 
 ```{r}
-model_preds <- ggpredict(model1, 
-                         terms = c("sla",
+model_preds <- ggpredict(model4, 
+                         terms = c(
                                    "water_treatment", 
                                    "species_name"))
 
 # use View(model_preds) to see the predictions as a data frame
 # use model_preds to see the predictions formatted nicely
+
+View(model_preds)
 ```
 
 # Visualization
 
-**Note:** this is the quick way to visualize model predictions. For your homework, you may find it easier to plot things yourself (i.e. not using the `plot()` functionality within `ggeffects`). See lecture for an example of how to do this.  
+**Note:** this is the quick way to visualize model predictions. For your homework, you may find it easier to plot things yourself (i.e. not using the `plot()` functionality within `ggeffects`). See lecture for an example of how to do this.
 
 ```{r}
 # plot function within ggeffects
 plot(model_preds, # model predictions
      limit_range = TRUE, # limit the range of predictions to the range of predictor values
-     show_data = TRUE) + # show the underlying data
+     show_data = TRUE,
+     facet = TRUE) + # show the underlying data
   # everything below this is ggplot() stuff
   theme_classic() + # classic theme
   labs(title = "Preliminary model visualization") + # plot title
@@ -257,9 +285,9 @@ The "more customizable" way:
 ```{r}
 # creating new data frame of model predictions for plotting
 model_preds_for_plotting <- model_preds %>% 
-  rename(sla = x, # renaming columns to make this easier to use
-         water_treatment = group,
-         species_name = facet)
+  rename(# renaming columns to make this easier to use
+         water_treatment = x,
+         species_name = group)
 
 # use View(model_preds_for_plotting) 
 # to compare this to the original model_preds data frame
@@ -267,51 +295,139 @@ model_preds_for_plotting <- model_preds %>%
 ggplot() +
   # underlying data
   geom_point(data = drought_exp_clean,
-             aes(x = sla,
+             aes(x = water_treatment,
                  y = total_g,
-                 color = water_treatment)) +
+                 color = water_treatment,
+                 alpha = 0.1)) +
   # model prediction 95% CI ribbon
   geom_ribbon(data = model_preds_for_plotting,
-              aes(x = sla, 
+              aes(x = water_treatment, 
                   y = predicted,
                   ymin = conf.low,
                   ymax = conf.high,
                   fill = water_treatment),
-              alpha = 0.2) +
-  # model prediction lines
-  geom_line(data = model_preds_for_plotting,
-            aes(x = sla, 
+              alpha = 0.2) + # display the mean and the ci of the data in the errorbar
+  geom_point(data = model_preds_for_plotting,
+            aes(x = water_treatment, 
                 y = predicted,
                 color = water_treatment)) +
   # cleaner theme
   theme_classic() +
+  #no legend
+  theme(legend.position = "none") + 
   # creating different panels for species
-  facet_wrap(~species_name) 
+  facet_wrap(~species_name) +
+  #change colors
+  scale_color_manual(values = c("Well watered" = "#afe67c", "Drought stressed" = "#cab90df0")) +
+  labs(
+    title = "Predicted Response by Species and Water Treatment", #title
+    x = "Species", #x axis title
+    y = "Total Biomass (g)")# y axis title
 ```
 
+## Problem 1
 
-# Making a table
+### a.
+
+Table 1: The columns are defined by the different models between variables. The Null model is
 
 ```{r}
-# one option for a single model
-flextable::as_flextable(model1) 
-
-# another option for a single model
-gtsummary::tbl_regression(model1)
+rows <- tribble(~term,~null,~"model 1", ~"model 2", ~"model 3", ~"model 4",
+                'AIC ∆', '81.22','2.44',  '60.37','32.12', '0.00',)  # create a manual tribble to add the aic delta to the table
+attr(rows, 'position') <- c(20)#put the new row in the 20th row of the table
 
 # comparing models
-modelsummary::modelsummary( # this function takes a list of models
+modelsummary <- modelsummary::modelsummary( # this function takes a list of models
   list( 
-    "null" = model0, # "model name" = model object
-    "model 1" = model1,
-    "model 2" = model2,
-    "model 3" = model3
-  )
-) 
+    "Null" = model0, # "model name" = model object
+    "Model 1" = model1,
+    "Model 2" = model2,
+    "Model 3" = model3,
+    "Model 4" = model4
+  ),
+  add_rows = rows, #add the manually made tibble to the table
+  gof_map = c("r.squared", "aic"), #only include the r squared and aic in the goodness of fit stats
+  title = "Table 1: Linear Regression of effect of SLA, Water Treatment, and Various Plant Species on Total Biomass", #add a title
+  statistic = c("p= {p.value}"), # make only p value statistics added to the table
+  output = "flextable", #make the output table a flextable so it can be edited as one
+  stars = TRUE #add stars to statistically significant values
+)
 
+modelsummary %>% 
+  autofit() %>% #make the spacing of the columns reasonable
+  border_inner_v() %>% #make vertical lines in between the cells
+  border_inner_h() %>% #make horizontal lines in between the cells
+  bg(i = c(1,3,5,7,9,11,13,15,17,19:21), bg = "grey") %>% #make the background of certain rows grey
+  bold(part = "header") # make the headers of the columns bold
 ```
 
 **Note 1: notice all the information at the bottom of the `modelsummary` output - if you only needed the AIC and delta AIC, what could you do? see package documentation for help**
 
 **Note 2: you will always have to report the F-statistic, degrees of freedom, test statistic, p-value, ⍺, and R^2^. Whether or not this information is in a table is up to you.**
 
+## b. Write a 5-6 sentence “statistical methods” section. (8 points)
+
+To analyze the influence of Specific Leaf Area (SLA), Species Type, and water treatment on total biomass of plant roots and shoots. We used five different linear regression models. These included a null model with no predictors (**model 0**)(, a saturated model with all three predictors (**model 1**)(fstat, df, teststat, pval,aplha, r2),a model with SLA and water treatment (**model 2**), a model with SLA and Species Type (**model 3**), and a model with water treatment and Species Type (**model 4**). To choose the final model that best predicts the total biomass and is the least complex, we used the Akaike Information Criterion (AIC). **Model 4** (water treatment and Species Type) had the lowest AIC (-159.2) and was therefore the best model to use. I then plotted and analyzed the diagnostics of **Model 4**, where I found that the residuals were homoscedastic, normally distributed and outliers were not an issue.
+
+## c.
+
+## d.Write a caption for your visualization.
+
+Data citation: Valliere, Justin; Zhang, Jacqueline; Sharifi, M.; Rundel, Philip (2019). Data from: Can we condition native plants to increase drought tolerance and improve restoration success? [Dataset]. Dryad. https://doi.org/10.5061/dryad.v0861f7
+
+## e. Write a 3-4 sentence results section.
+
+what predictors “best” described total mass (include model statistics here)? on average, what differences did you find between water treatments? on average, what differences did you find between species?
+
+```{r}
+drought_data <- as.data.frame(drought_exp_clean)
+
+data<- ggpredict(model4,
+          terms = c("water_treatment",
+                    "species_name"))
+  plot(data, aes(x = group, y = predicted, color = "x")) +
+  geom_point(position = position_dodge(width = 0.5), size = 3) +  # Use position_dodge for separation
+  facet_wrap(~ group) +  # Facet by species
+  scale_color_manual(values = c("Well-watered" = "blue", "Drought-stressed" = "red")) +  # Custom colors
+  theme_minimal() +  # Minimal theme for a clean look
+  theme(legend.position = "none") +  # Remove the legend
+  labs(
+    title = "Predicted Response by Species and Water Treatment",
+    x = "Species",
+    y = "Total Biomass (g)"
+  )
+  
+  plot(show_data = TRUE,
+       show_ci = TRUE,
+       ci_style = "errorbar") + 
+  facet_wrap(~ group) +
+  geom_jitter(width = 0.1)
+
+  plot(show_data = TRUE, 
+       facet = TRUE, 
+       colors = "ipsum",
+       show_ci = TRUE,
+       ci_style = "errorbar") +
+  aes(color = group)
+  
+  Acmispon glaber, Encelia californica, Eschscholzia californica, Penstemon centranthifolius, Grindelia camporum, Salvia leucophylla, Stipa pulchra
+```
+
+
+## **Problem 2**
+
+### a.
+
+I have a number of different predictor variables that I was looking at to see if they influenced my plunge time. I think I want to look at how the air temp and weather type affected my plunge time. I am thinking of doing a thermometer with temps labelled on one side and then symbols representing different time spent plunging classifications and then something to add to those symbols to represent weather type. These symbols will stack horizontally to from left to right.
+
+### b. **Inital Affective Data Viz**
+
+![Sketch](images/IMG_0945.jpg){fig-align="center" width="2016"}
+
+### c. **Draft Affective Data Viz**
+
+![Draft](images/IMG_0947.jpg){fig-align="center" width="2016"}
+
+### d.
+
+In this piece I am showing how my time spent cold plunging varies over different air temps and weather types. Each circle represents one cold plunge and hwo filled in it is represents the amount of time spent in the water during that cold plunge. I drew a lot of inspiration from [Stefanie Posavec and Giorgia Lupi’s Dear Data project](https://www.dear-data.com/all). This is just an initial pencil skecth but I will put colors into this sketch to make the piece more attractive. I spent a lot of time brain storming which variables to use and how to use them.
