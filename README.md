@@ -1,11 +1,12 @@
-# ENVS 193DS Workshop 8/Homework 3 repository
+# ENVS 193DS Homework 3
 ## Spring 2024
+## By Dylan Freebairn-Smith
 
-# General information
+# General Info
 
-**Description**: repo for Workshop 8 that provides the foundation for Homework 3  
+**Description**: This is my final homework assignment of the Spring 2024 Statistsics for Environmental Data Science.
 
-**Research focus**: examining effects of specific leaf area (mm^2^/g), water treatment (well-watered or drought-stressed), and species on plant mass  
+**Research focus**: examining effects of specific leaf area (mm^2^/g), water treatment (well-watered or drought-stressed), and species on total plant mass based on data from a study done at UCLA.
 
 **Data source**: Valliere, Justin; Zhang, Jacqueline; Sharifi, M.; Rundel, Philip (2019). Data from: Can we condition native plants to increase drought tolerance and improve restoration success? [Dataset]. Dryad. https://doi.org/10.5061/dryad.v0861f7  
 
@@ -14,6 +15,9 @@
 ```
 .
 ├── ENVS193DS_workshop-08.Rproj
+├── images
+│   ├── IMG_0945.jpg
+│   ├── IMG_0947.jpg
 ├── README.md                                 # information about the repository
 ├── code
 │   ├── homework-starter-doc_KEY.html         # rendered HTML of key code
