@@ -14,21 +14,34 @@ the San Juan Islands, Washington, USA](https://doi.org/10.1006/jmsc.2000.0808).
 # Data and file overview
 
 ```
-.
-├── ENVS193DS_workshop-08.Rproj
-├── images
-│   ├── IMG_0945.jpg
-│   ├── IMG_0947.jpg
-├── README.md                                 # information about the repository
-├── code
-│   ├── homework-starter-doc_KEY.html         # rendered HTML of key code
-│   ├── homework-starter-doc_KEY.qmd          # key code file
-│   ├── homework-starter-doc_KEY_files        # files associated with rendered HTML
-│   │   ├── figure-html                       # all figure outputs (explore this file!)
-│   │   └── libs                              # accessory files for HTML
-│   └── homework-starter-doc_TEMPLATE.qmd     # template code file
-└── data
-    └── Valliere_etal_EcoApps_Data.xlsx       # data
+├── DTFSHW3_files
+│   ├── figure-html # figures
+│   └── libs # formatting
+├── ENVS193DS_workshop-08.Rproj # project file
+├── Homework-3-final.html
+├── Homework-3-final.qmd
+├── Homework-3-final_files
+│   ├── figure-html
+│   │   └── unnamed-chunk-12-1.png # visualization
+│   └── libs # formatting
+├── README.md
+├── code # files used for workshop and intial lm setup
+│   ├── homework-starter-doc_KEY.html 
+│   ├── homework-starter-doc_KEY.qmd
+│   ├── homework-starter-doc_KEY_files
+│   │   ├── figure-html # key figures
+│   │   └── libs # formatting
+│   ├── homework-starter-doc_TEMPLATE.html
+│   ├── homework-starter-doc_TEMPLATE.qmd
+│   └── homework-starter-doc_TEMPLATE_files
+│       ├── figure-html # draft figures
+│       └── libs # .css formatting
+├── data
+│   └── Valliere_etal_EcoApps_Data.xlsx # data used for models
+└── images
+    ├── IMG_0945.jpg # sketch
+    ├── IMG_0947.jpg # draft
+    └── stat_crit.png # paper figure
 ```
 
 # Rendered output
