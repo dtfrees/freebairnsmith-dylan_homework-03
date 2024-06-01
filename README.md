@@ -46,7 +46,7 @@ the San Juan Islands, Washington, USA](https://doi.org/10.1006/jmsc.2000.0808).
 
 # Rendered output
 
-The rendered .html for this repo is [here](https://an-bui.github.io/ENVS193DS_workshop-08/code/homework-starter-doc_KEY.html).
+The rendered .html for this Homework-3-final.qmd is [here](https://dtfrees.github.io/freebairnsmith-dylan_homework-03/).
 
 # For full credit
 
