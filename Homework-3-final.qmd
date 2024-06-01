@@ -42,7 +42,6 @@ drought_exp <- read_xlsx(path = here("data",
                          sheet = "First Harvest")
 ```
 
-
 ## Clean the data
 
 ```{r}
@@ -158,6 +157,7 @@ modelsummary <- modelsummary %>%
 Table 1: The columns are defined by the different and each row shows a differnet predictor variable estimate and the p-value ($\alpha = 0.05$) below it. The Null model has none of the predictor values. The saturated model with all predictor variables is Model 1 (F(8, 61) = 23.44, p-val \< 0.001, $\alpha = 0.05$, $R^2 = 0.7545$). Model 2 (F(2, 67) = 14.57, p-val \< 0.001, $\alpha = 0.05$, $R^2 = 0.3031$), Model 3 (F(7, 62) = 13.85, p-val \< 0.001, $\alpha = 0.05$, $R^2 = 0.61$), and Model 4 (F(7, 62) = 27.08, p-val \< 0.001, $\alpha = 0.05$, $R^2 = 0.7535$) each have some other combination of Specific Leaf Area (sla), Water-treatment, and Species Type.
 
 #### Table 1: Linear Regression of Effect of SLA, Water Treatment, and Various Plant Species on Total Biomass
+
 ```{r}
 #| echo: false
 modelsummary
@@ -255,7 +255,7 @@ Model 4 with predictors Species type and water treatment had the best prediction
 
 ## **Problem 2**
 
-### a. Describe in words what an affective visualization could look like for your personal data 
+### a. Describe in words what an affective visualization could look like for your personal data
 
 I have a number of different predictor variables that I was looking at to see if they influenced my plunge time. I think I want to look at how the air temp and weather type affected my plunge time. I am thinking of doing a thermometer with temps labelled on one side and then symbols representing different time spent plunging classifications and then something to add to those symbols to represent weather type. These symbols will stack horizontally to from left to right.
 
@@ -273,12 +273,11 @@ In this piece, I am showing how my time spent cold plunging varies over differen
 
 ## Problem 3
 
-[An assessment of the effectiveness of Marine Protected Areas in
-the San Juan Islands, Washington, USA](https://doi.org/10.1006/jmsc.2000.0808)
+[An assessment of the effectiveness of Marine Protected Areas in the San Juan Islands, Washington, USA](https://doi.org/10.1006/jmsc.2000.0808)
 
-### a. Revisit and Summarize The authors used Principal Component Analysis (PCA),
+### a. Revisit and Summarize 
 
-One-Way Analysis of Variance (ANOVA), and a Pearson product-moment correlation matrix. The PCA was used to explore site and species relationships. The ANOVA was used to see the significance of each variable that had an influence on the clustering of the sites and species. Finally, the correlation matrix was used to find relationships between abiotic variables.
+The authors used Principal Component Analysis (PCA), One-Way Analysis of Variance (ANOVA), and a Pearson product-moment correlation matrix. The PCA was used to explore site and species relationships. The ANOVA was used to see the significance of each variable that had an influence on the clustering of the sites and species. Finally, the correlation matrix was used to find relationships between abiotic variables.
 
 ![Source: Tuya et al., 2000](images/stat_crit.png)
 
